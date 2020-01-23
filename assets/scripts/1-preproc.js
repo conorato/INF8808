@@ -15,6 +15,7 @@ function domainColor(color, data) {
   // TODO: Définir le domaine de la variable "color" en associant un nom de rue à une couleur.
   var rues = Object.keys(data[0]);
   color.domain(rues);
+  // console.log(rues);
 }
 
 /**
@@ -54,14 +55,22 @@ function parseDate(data) {
  */
 function createSources(color, data) {
   // TODO: Retourner l'objet ayant le format demandé.
-  for (var i = 0; i < color.domain().length(); i++) {
-    var rue = color.domain()[i];
-    color.domain()[i] = { "name": color.domain()[i], "values" : []};
-  } 
-  //for (var i = 0; i < ) {
-//
-  //}
-  return color.domain();
+  //var rues = color.domain()
+  var rues = []
+  for (var i = 1; i < color.domain().length; i++) {
+    // var rue = color.domain()[i];
+    var rue = { "name": color.domain()[i], "values" : [] };
+    rues.push(rue);
+  }
+  
+  for (var i = 0; i < rues.length; i++) {
+    for (var j = 0; j < data.length; j ++) {
+      rues[i]["values"].push({"date": data[j].Date, "count": parseInt(data[j][rues[i].name])}); //parseINT la dessus
+    }
+  }
+  console.log(rues);
+
+  return rues;
 }
 
 /**
@@ -73,7 +82,13 @@ function createSources(color, data) {
  */
 function domainX(xFocus, xContext, data) {
   // TODO: Préciser les domaines pour les variables "xFocus" et "xContext" pour l'axe X.
-
+  var dates = []
+  for (let i = 0; i < data.length; i++) {
+    dates.push(data[i].Date);
+  }
+  //console.log(dates);
+  xFocus.domain([d3.min(dates), d3.max(dates)]);
+  xContext.domain([d3.min(dates), d3.max(dates)]);
 }
 
 /**
@@ -85,5 +100,12 @@ function domainX(xFocus, xContext, data) {
  */
 function domainY(yFocus, yContext, sources) {
   // TODO: Préciser les domaines pour les variables "yFocus" et "yContext" pour l'axe Y.
-
+  var counts = [];
+  for( let i = 0; i < sources.length; i++) {
+    for (var j = 0; j < sources[i]["values"].length; j++) {
+        counts.push(sources[i]["values"][j]["count"]);
+    }
+  }
+  yFocus.domain([d3.min(counts), d3.max(counts)]);
+  yContext.domain([d3.min(counts), d3.max(counts)]);
 }
