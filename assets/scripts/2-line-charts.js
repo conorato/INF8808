@@ -20,11 +20,8 @@ function createLine(x, y) {
   // Vérifier si ce sont les bons champs du datum qu'on met (si ce n'est pas x et y).
   console.log("asd");
   return d3.line()
-    .x(d => {     
-      console.log(d.values.map(elem => x(elem.date))); 
-      return d.values.map(elem => x(elem.date));
-    })
-    .y(d => d.values.map(elem => y(elem.count)))
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.count);  })
     .curve(d3.curveBasisOpen);
 }
 
@@ -39,13 +36,15 @@ function createLine(x, y) {
 function createFocusLineChart(g, sources, line, color) {
   // TODO: Dessiner le graphique focus dans le groupe "g".
   // Pour chacun des "path" que vous allez dessiner, spécifier l'attribut suivant: .attr("clip-path", "url(#clip)").
-  g.selectAll("path")
-    .data(sources)
-    .enter()
-    .append("path")
-    .attr("clip-path", "url(#clip)")
-    .attr("fill", d => color(d.id))
-    .attr("d", line);
+  for (var i = 0; i < sources.length; i++) {
+    g.append("path")
+        .data([sources[i].values])
+        .attr("class", "line")
+        .attr("d", line)
+        .attr("stroke", color(sources[i].name))
+        .attr("clip-path", "url(#clip)")
+        .attr("id", sources[i].name);
+  }
 }
 
 /**
@@ -58,8 +57,12 @@ function createFocusLineChart(g, sources, line, color) {
  */
 function createContextLineChart(g, sources, line, color) {
   // TODO: Dessiner le graphique contexte dans le groupe "g".
-  g.append("path")
-    .datum(sources)
-    .attr("fill", d => color(d.id))
-    .attr("d", line);
+  for (var i = 0; i < sources.length; i++) {
+    g.append("path")
+    .data([sources[i].values])
+    .attr("class", "line")
+    .attr("d", line)
+    .attr("stroke", color(sources[i].name))
+    .attr("id", sources[i].name);
+  }
 }

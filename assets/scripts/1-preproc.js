@@ -64,7 +64,7 @@ function createSources(color, data) {
   
   for (var i = 0; i < rues.length; i++) {
     for (var j = 0; j < data.length; j ++) {
-      rues[i]["values"].push({"date": data[j].Date, "count": parseInt(data[j][rues[i].name])}); //parseINT la dessus
+      rues[i]["values"].push({"date": data[j].Date, "count": parseInt(data[j][rues[i].name])});
     }
   }
 
