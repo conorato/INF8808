@@ -15,7 +15,6 @@ function domainColor(color, data) {
   // TODO: Définir le domaine de la variable "color" en associant un nom de rue à une couleur.
   var rues = Object.keys(data[0]);
   color.domain(rues);
-  // console.log(rues);
 }
 
 /**
@@ -68,7 +67,6 @@ function createSources(color, data) {
       rues[i]["values"].push({"date": data[j].Date, "count": parseInt(data[j][rues[i].name])}); //parseINT la dessus
     }
   }
-  console.log(rues);
 
   return rues;
 }
@@ -86,7 +84,6 @@ function domainX(xFocus, xContext, data) {
   for (let i = 0; i < data.length; i++) {
     dates.push(data[i].Date);
   }
-  //console.log(dates);
   xFocus.domain([d3.min(dates), d3.max(dates)]);
   xContext.domain([d3.min(dates), d3.max(dates)]);
 }
