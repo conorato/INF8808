@@ -18,7 +18,6 @@
 function createLine(x, y) {
   // TODO: Retourner une ligne SVG (voir "d3.line"). Pour l'option curve, utiliser un curveBasisOpen.
   // Vérifier si ce sont les bons champs du datum qu'on met (si ce n'est pas x et y).
-  console.log("asd");
   return d3.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.count);  })
