@@ -70,7 +70,7 @@
   // Permet de redessiner le graphique principal lorsque le zoom/brush est modifié.
  const brush = d3.brushX()
     .extent([[0, 0], [widthContext, heightContext]])
-    .on("brush", function () {
+    .on("brush", () => {
       brushUpdate(brush, focus, lineFocus, xFocus, xContext, xAxisFocus, yAxisFocus);
     });
 

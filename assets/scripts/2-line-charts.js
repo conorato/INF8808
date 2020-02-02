@@ -15,14 +15,14 @@
  *
  * @see https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89      (voir line generator)
  */
-function createLine(x, y) {
+const createLine = (x, y) => {
   // TODO: Retourner une ligne SVG (voir "d3.line"). Pour l'option curve, utiliser un curveBasisOpen.
   // Vérifier si ce sont les bons champs du datum qu'on met (si ce n'est pas x et y).
   return d3.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.count);  })
+    .x(d => x(d.date))
+    .y(d => y(d.count))
     .curve(d3.curveBasisOpen);
-}
+};
 
 /**
  * Crée le graphique focus.
@@ -32,17 +32,17 @@ function createLine(x, y) {
  * @param line      La fonction permettant de dessiner les lignes du graphique.
  * @param color     L'échelle de couleurs ayant une couleur associée à un nom de rue.
  */
-function createFocusLineChart(g, sources, line, color) {
+const createFocusLineChart = (g, sources, line, color) => {
   // TODO: Dessiner le graphique focus dans le groupe "g".
   // Pour chacun des "path" que vous allez dessiner, spécifier l'attribut suivant: .attr("clip-path", "url(#clip)").
-  for (var i = 0; i < sources.length; i++) {
+  for (const source of sources) {
     g.append("path")
-        .data([sources[i].values])
-        .attr("class", "line")
-        .attr("d", line)
-        .attr("stroke", color(sources[i].name))
-        .attr("clip-path", "url(#clip)")
-        .attr("id", sources[i].name);
+      .data([source.values])
+      .attr("class", "line")
+      .attr("d", line)
+      .attr("stroke", color(source.name))
+      .attr("clip-path", "url(#clip)")
+      .attr("id", source.name);
   }
 }
 
@@ -56,12 +56,12 @@ function createFocusLineChart(g, sources, line, color) {
  */
 function createContextLineChart(g, sources, line, color) {
   // TODO: Dessiner le graphique contexte dans le groupe "g".
-  for (var i = 0; i < sources.length; i++) {
+  for (const source of sources) {
     g.append("path")
-    .data([sources[i].values])
+    .data([source.values])
     .attr("class", "line")
     .attr("d", line)
-    .attr("stroke", color(sources[i].name))
-    .attr("id", sources[i].name);
+    .attr("stroke", color(source.name))
+    .attr("id", source.name);
   }
 }
