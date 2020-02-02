@@ -24,6 +24,12 @@ const createLine = (x, y) => {
     .curve(d3.curveBasisOpen);
 };
 
+const setAvgLineColor = (g) => {
+  g.select("#Moyenne")
+    .attr("stroke-width", "0.25%")
+    .attr("stroke", "#000000");
+};
+
 /**
  * Crée le graphique focus.
  *
@@ -44,7 +50,8 @@ const createFocusLineChart = (g, sources, line, color) => {
       .attr("clip-path", "url(#clip)")
       .attr("id", source.name);
   }
-}
+  setAvgLineColor(g);
+};
 
 /**
  * Crée le graphique contexte.
@@ -54,14 +61,15 @@ const createFocusLineChart = (g, sources, line, color) => {
  * @param line      La fonction permettant de dessiner les lignes du graphique.
  * @param color     L'échelle de couleurs ayant une couleur associée à un nom de rue.
  */
-function createContextLineChart(g, sources, line, color) {
+const createContextLineChart = (g, sources, line, color) => {
   // TODO: Dessiner le graphique contexte dans le groupe "g".
   for (const source of sources) {
     g.append("path")
-    .data([source.values])
-    .attr("class", "line")
-    .attr("d", line)
-    .attr("stroke", color(source.name))
-    .attr("id", source.name);
+      .data([source.values])
+      .attr("class", "line")
+      .attr("d", line)
+      .attr("stroke", color(source.name))
+      .attr("id", source.name);
   }
-}
+  setAvgLineColor(g);
+};
