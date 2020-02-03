@@ -27,7 +27,7 @@ const createLine = (x, y) => {
 const setAvgLineColor = (g) => {
   g.select("#Moyenne")
     .attr("stroke-width", "0.25%")
-    .attr("stroke", "#000000");
+    .attr("stroke", "black");
 };
 
 /**

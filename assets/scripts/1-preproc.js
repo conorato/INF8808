@@ -25,7 +25,7 @@ const domainColor = (color, data) => {
  */
 const parseDate = data => {
   // TODO: Convertir les dates du fichier CSV en objet de type Date.
-  const parser = d3.timeParse("%d/%m/%y"); //J ai trouvé ça la dessus http://learnjsdata.com/time.html
+  const parser = d3.timeParse("%d/%m/%y");
   for (const datum of data) {
     datum.Date = parser(datum.Date);
   }
