@@ -36,7 +36,7 @@ const legend = (svg, sources, color) => {
       .attr("fill-opacity", "100%")
       .on("click", () => displayLine(rect, color));
 
-    if (name == "Moyenne") {
+    if (name === "Moyenne") {
       rect.attr("fill", "black")
     }
 
