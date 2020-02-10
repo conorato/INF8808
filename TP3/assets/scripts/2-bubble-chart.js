@@ -18,6 +18,30 @@ function createAxes(g, xAxis, yAxis, height, width) {
   // TODO: Dessiner les axes X et Y du graphique.
   // Axe horizontal
 
+  // Axe des abcisses
+  g.append("g").attr("class", "axe x")
+               .call(xAxis)
+               .attr("transform", "translate(0," + height + ")");
+
+  // Axe des ordonnées
+  g.append("g").attr("class", "axe y")
+               .call(yAxis);
+     
+  // Légende des abcisses
+  g.append("text").text("Espérance de vie (années)")
+                  .attr("class", "legende abcisses")
+                  .attr("text-anchor", "end")
+                  .attr("x", width)
+                  .attr("y", height - 10);
+
+  // Légende des ordonnées
+  g.append("text").text("Revenu (USD)")
+                  .attr("class", "legende ordonnées")
+                  .attr("text-anchor", "end")
+                  .attr("x", 0)
+                  .attr("transform", "rotate(-90)")
+                  //.attr("transform", "translate(-15)")
+                  .attr("y", 15);
 }
 
 /**
@@ -34,5 +58,15 @@ function createAxes(g, xAxis, yAxis, height, width) {
 function createBubbleChart(g, data, x, y, r, color, tip) {
   // TODO: Dessiner les cercles du graphique en utilisant les échelles spécifiées.
   //       Assurez-vous d'afficher l'infobulle spécifiée lorsqu'un cercle est survolé.
+  // On selection tous les cercles pour appliquer les modifs sur chacun d'entre eux
+  var circles = g.selectAll("circle");
+
+  circles.data(data).enter().append("circle")
+                    .attr("cx", function(p){ return x(p.lifeExpectancy) })
+                    .attr("cy", function(p){ return y(p.income) })
+                    .attr("r", function(p){ return r(p.population) })
+                    .attr("fill", function(p){ return color(p.zone) })
+                    .on("mouseover", tip.show)
+                    .on("mouseout", tip.hide);
 
 }
