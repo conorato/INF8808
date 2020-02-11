@@ -20,5 +20,11 @@ function transition(g, data, x, y, r) {
        - Mettre à jour la taille du rayon des cercles.
        - La transition doit se faire en 1 seconde.
    */
+    var circles = g.selectAll("circle");
 
+    circles.data(data).transition().duration(1000) // 1000ms = 1 seconde
+                      .attr("cx", function(p){ return x(p.lifeExpectancy) })
+                      .attr("cy", function(p){ return y(p.income) })
+                      .attr("r", function(p){ return r(p.population) })
+                      .ease(d3.easeExp); 
 }
