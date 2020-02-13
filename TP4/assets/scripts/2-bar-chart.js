@@ -18,14 +18,16 @@ function createAxes(g, xAxis, yAxis, height) {
   
   // Axe des abcisses
   g.append("g")
+    .attr("class", "x-axis")
     .call(xAxis)
     .attr("transform", `translate(0, ${height})`)
     .selectAll("text")
     .style("text-anchor", "start")
-    .attr("transform", "rotate(30)");
+    .attr("transform", "rotate(30) scale(1.1)");
 
   // Axe des ordonnées
   g.append("g")
+    .attr("class", "y-axis")
     .call(yAxis);
   
   // Légende des ordonnées
@@ -33,16 +35,6 @@ function createAxes(g, xAxis, yAxis, height) {
     .text("Nombre de trajets")
     .attr("x", -20)
     .attr("y", -10);
-     
-
-  // Légende des ordonnées
-  // g.append("text").text("Salaire ($ US)")
-  //                 .attr("class", "legende ordonnées")
-  //                 .attr("text-anchor", "end")
-  //                 .attr("x", 0)
-  //                 .attr("transform", "rotate(-90)")
-  //                 //.attr("transform", "translate(-15)")
-  //                 .attr("y", 15);
 }
 
 /**
@@ -59,7 +51,18 @@ function createAxes(g, xAxis, yAxis, height) {
 function createBarChart(g, currentData, x, y, color, tip, height) {
   // TODO: Dessiner les cercles à bandes en utilisant les échelles spécifiées.
   //       Assurez-vous d'afficher l'infobulle spécifiée lorsqu'une barre est survolée.
+  const SPACE_BETWEEN_BARS = 5;
 
+  g.selectAll("rect")
+      .data(currentData.destinations)
+    .enter().append("rect")
+      .style("fill", d => color(d.name))
+      .attr("x", d => x(d.name) + SPACE_BETWEEN_BARS)
+      .attr("width", x.bandwidth() - SPACE_BETWEEN_BARS)
+      .attr("y", d => y(d.count))
+      .attr("height", d => height - y(d.count))
+      .on("mouseover", tip.show)
+      .on("mouseout", tip.hide);
 }
 
 /**
@@ -76,7 +79,24 @@ function transition(g, newData, y, yAxis, height) {
    - Réaliser une transition pour mettre à jour l'axe des Y et la hauteur des barres à partir des nouvelles données.
    - La transition doit se faire en 1 seconde.
    */
+  const nbTrajets = newData
+    .destinations
+    .map(x => x.count);
+  
+  y.domain([d3.min(nbTrajets), d3.max(nbTrajets)]);
 
+  g.selectAll("rect")
+      .data(newData.destinations)
+    .transition()
+    .duration(1000)
+    .attr("y", d => y(d.count))
+    .attr("height", d => height - y(d.count))
+    .ease(d3.easeExp)
+  
+  g.selectAll("g.y-axis")
+    .transition()
+    .duration(1000)
+    .call(yAxis);
 }
 
 /**
@@ -90,6 +110,9 @@ function transition(g, newData, y, yAxis, height) {
 function getToolTipText(d, currentData, formatPercent) {
   // TODO: Retourner le texte à afficher dans l'infobulle selon le format demandé.
   //       Assurez-vous d'utiliser la fonction "formatPercent" pour formater le pourcentage correctement.
-
-  return "";
+  const nbTotalTrajet = d3.sum(currentData
+    .destinations
+    .map(x => x.count));
+  
+  return `${d.count} (${formatPercent(d.count/nbTotalTrajet)})`;
 }
