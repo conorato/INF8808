@@ -13,7 +13,7 @@
  */
 function domainColor(color, data) {
   // TODO: Préciser le domaine de l'échelle de couleurs en y associant les stations de BIXI utilisées.
-
+  color.domain = data.map(x => x.name);
 }
 
 /**
@@ -23,8 +23,9 @@ function domainColor(color, data) {
  * @param data    Données provenant du fichier JSON.
  */
 function domainX(x, data) {
+  const stations = data.map(x => x.name);
   // TODO: Préciser le domaine pour la variable "x" en y associant les stations de BIXI utilisées.
-
+  x.domain(stations);
 }
 
 /**
@@ -35,7 +36,11 @@ function domainX(x, data) {
  */
 function domainY(y, currentData) {
   // TODO: Préciser le domaine pour la variable "y" en prenant comme minimum et maximum le nombre de trajets vers une station de BIXI.
-
+  const nbTrajets = currentData
+    .destinations
+    .map(x => x.count);
+  
+  y.domain([d3.min(nbTrajets), d3.max(nbTrajets)]);
 }
 
 /**
@@ -46,7 +51,11 @@ function domainY(y, currentData) {
  */
 function getMatrix(data) {
   // TODO: Calculer la matrice d'adjacence pour créer le diagramme à cordes.
-  return [];
+  return data.map(from =>
+    from.destinations.map(to =>
+      to.count
+    )
+  );
 }
 
 /**
@@ -56,5 +65,11 @@ function getMatrix(data) {
  */
 function getTotal(data) {
   // TODO: Calculer le nombre total de trajets réalisés pour le mois d'août 2015.
-  return 0;
+  return d3.sum(
+    data.flatMap(
+      from => from.destinations.map(
+        to => to.count
+      )
+    )
+  );
 }

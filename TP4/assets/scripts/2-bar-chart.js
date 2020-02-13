@@ -15,8 +15,34 @@
  */
 function createAxes(g, xAxis, yAxis, height) {
   // TODO: Dessiner les axes X et Y du graphique. Assurez-vous d'indiquer un titre pour l'axe Y.
-  // Axe horizontal
+  
+  // Axe des abcisses
+  g.append("g")
+    .call(xAxis)
+    .attr("transform", `translate(0, ${height})`)
+    .selectAll("text")
+    .style("text-anchor", "start")
+    .attr("transform", "rotate(30)");
 
+  // Axe des ordonnées
+  g.append("g")
+    .call(yAxis);
+  
+  // Légende des ordonnées
+  g.append("text")
+    .text("Nombre de trajets")
+    .attr("x", -20)
+    .attr("y", -10);
+     
+
+  // Légende des ordonnées
+  // g.append("text").text("Salaire ($ US)")
+  //                 .attr("class", "legende ordonnées")
+  //                 .attr("text-anchor", "end")
+  //                 .attr("x", 0)
+  //                 .attr("transform", "rotate(-90)")
+  //                 //.attr("transform", "translate(-15)")
+  //                 .attr("y", 15);
 }
 
 /**

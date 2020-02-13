@@ -41,15 +41,27 @@ const setAvgLineColor = (g) => {
 const createFocusLineChart = (g, sources, line, color) => {
   // TODO: Dessiner le graphique focus dans le groupe "g".
   // Pour chacun des "path" que vous allez dessiner, spécifier l'attribut suivant: .attr("clip-path", "url(#clip)").
-  for (const source of sources) {
-    g.append("path")
-      .data([source.values])
-      .attr("class", "line")
-      .attr("d", line)
-      .attr("stroke", color(source.name))
-      .attr("clip-path", "url(#clip)")
-      .attr("id", source.name);
-  }
+  // for (const source of sources) {
+  //   g.append("path")
+  //     .data([source.values])
+  //     .attr("class", "line")
+  //     .attr("d", line)
+  //     .attr("stroke", color(source.name))
+  //     .attr("clip-path", "url(#clip)")
+  //     .attr("id", source.name);
+  // }
+
+  // Correction selon les commentaires de correction
+  g.selectAll()
+    .data(sources)
+    .enter()
+    .append("path")
+    .attr("class", "line")
+    .attr("d", x => line(x.values))
+    .attr("stroke", x => color(x.name))
+    .attr("clip-path", "url(#clip)")
+    .attr("id", x => x.name);
+
   setAvgLineColor(g);
 };
 
