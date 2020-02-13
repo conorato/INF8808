@@ -35,7 +35,7 @@ function createAxes(g, xAxis, yAxis, height, width) {
                   .attr("y", height - 10);
 
   // Légende des ordonnées
-  g.append("text").text("Revenu (USD)")
+  g.append("text").text("Salaire ($ US)")
                   .attr("class", "legende ordonnées")
                   .attr("text-anchor", "end")
                   .attr("x", 0)

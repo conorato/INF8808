@@ -15,5 +15,9 @@
 function getToolTipText(d, formatNumber) {
   // TODO: Retourner le texte à afficher dans l'infobulle selon le format demandé.
   //       Assurez-vous d'utiliser la fonction "formatNumber" pour formater les nombres correctement.
+  var toolTipText = "Pays: "+ d.name + "\n <br>" + "Esperance de vie: " + formatNumber(d.lifeExpectancy) + "ans \n <br>"
+                    + "Revenu Moyen: " + formatNumber(d.income) + "dollars \n <br>" + "Population: " + formatNumber(d.population) 
+                    + "personnes \n <br>" + "Zone du monde: " + d.zone;
 
+  return toolTipText;
 }

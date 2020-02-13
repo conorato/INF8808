@@ -14,9 +14,11 @@
 function initializeData(data) {
   // TODO: Convertir les propriétés "income", "lifeExpectancy" et "population" au format "number" pour chacune des entrées.
   for (let i = 0; i < data.length; i++){
+
     data[i].population = parseInt(data[i].population);
     data[i].income = parseFloat(data[i].income);
-		data[i].lifeExpectancy = parseFloat(data[i].lifeExpectancy);
+    data[i].lifeExpectancy = parseFloat(data[i].lifeExpectancy);
+    
 	}
 }
 
@@ -48,8 +50,9 @@ function domainY(y) {
  */
 function domainColor(color, data) {
   // TODO: Préciser le domaine de l'échelle de couleurs. Assurez-vous d'associer une zone du monde distincte pour chaque couleur.
-  var zonesCouleurs = data.map(function(x){ return x.zone;});
-  color.domain = zonesCouleurs.filter(function(x,c,zone){ return zone.indexOf(x) === c});
+
+  color.domain = data.map(function(x){ return x.zone;});
+
 }
 
 /**
