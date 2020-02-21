@@ -25,23 +25,26 @@ function createGroups(g, data, layout, arc, color, total, formatPercent) {
      - Tronquer les noms des stations de BIXI qui sont trop longs (Pontiac et Métro Mont-Royal).
      - Afficher un élément "title" lorsqu'un groupe est survolé par la souris.
   */
-  const get_short_enough_labels = (name) => {
+  const get_short_enough_labels = name => {
     if (name === "Pontiac / Gilford") {
       name = "Pontiac";
     } else if (name === "Métro Mont-Royal (Rivard/Mont-Royal)") {
       name = "Métro Mont-Royal";
     }
-
     return name;
   };
+
+  const get_title_text = d => `${data[d.index].name}: ${formatPercent(d.value/total)} des départs`;
 
   const groups = g.selectAll("g")
     .data(layout.groups)
     .enter();
 
   groups.append("path")
-    .attr("fill", d => color(d.index))
-    .attr("d", arc);
+      .attr("fill", d => color(d.index))
+      .attr("d", arc)
+    .append("title")
+      .text(get_title_text);
 
   groups.append("text")
       .attr("dx", 5)
@@ -50,7 +53,10 @@ function createGroups(g, data, layout, arc, color, total, formatPercent) {
       .attr("fill", "white") 
       .attr("path", arc)
       .attr("font-size", "80%")
-      .text(d => get_short_enough_labels(data[d.index].name));
+      .text(d => get_short_enough_labels(data[d.index].name))
+    .append("title")
+      .text(get_title_text);
+
 }
 
 /**
