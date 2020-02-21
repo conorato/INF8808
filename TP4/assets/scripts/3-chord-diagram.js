@@ -36,17 +36,18 @@ function createGroups(g, data, layout, arc, color, total, formatPercent) {
 
   const get_title_text = d => `${data[d.index].name}: ${formatPercent(d.value/total)} des départs`;
 
-  const groups = g.selectAll("g")
-    .data(layout.groups)
-    .enter();
-
-  groups.append("path")
+  g.selectAll("groups.path")
+      .data(layout.groups)
+    .enter().append("path")
+      .attr("class", "groups")
       .attr("fill", d => color(d.index))
       .attr("d", arc)
     .append("title")
       .text(get_title_text);
 
-  groups.append("text")
+  g.selectAll("text")
+      .data(layout.groups)
+    .enter().append("text")
       .attr("dx", 5)
       .attr("dy", 17)
     .append("textPath")
@@ -77,7 +78,20 @@ function createChords(g, data, layout, path, color, total, formatPercent) {
      - Créer les cordes du diagramme avec une opacité de 80%.
      - Afficher un élément "title" lorsqu'une corde est survolée par la souris.
   */
+  const FILL_OPACITY_FULL = 0.8;
+  const get_title = (from, to) => `${data[from.index].name} → ${data[to.index].name}: ${formatPercent(from.value/total)}`;
 
+  g.selectAll("chords.path")
+      .data(layout)
+    .enter().append("path")
+      .attr("class", "chords")
+      .attr("d", path)
+      .attr("fill-opacity", FILL_OPACITY_FULL)
+      .attr("fill", d => color(d.source.index))
+      .on("mouseover", _ => d3.select(event.currentTarget).attr("fill-opacity", 0.95))
+      .on("mouseout", _ => d3.select(event.currentTarget).attr("fill-opacity", FILL_OPACITY_FULL))
+    .append("title")
+      .text(d => `${get_title(d.source, d.target)}\n${get_title(d.target, d.source)}`);
 }
 
 /**
