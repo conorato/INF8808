@@ -36,7 +36,7 @@ function createGroups(g, data, layout, arc, color, total, formatPercent) {
 
   const get_title_text = d => `${data[d.index].name}: ${formatPercent(d.value/total)} des départs`;
 
-  g.selectAll("groups.path")
+  g.selectAll("path.groups")
       .data(layout.groups)
     .enter().append("path")
       .attr("class", "groups")
@@ -78,18 +78,18 @@ function createChords(g, data, layout, path, color, total, formatPercent) {
      - Créer les cordes du diagramme avec une opacité de 80%.
      - Afficher un élément "title" lorsqu'une corde est survolée par la souris.
   */
-  const FILL_OPACITY_FULL = 0.8;
+  const FILL_OPACITY_INITIAL = 0.8;
   const get_title = (from, to) => `${data[from.index].name} → ${data[to.index].name}: ${formatPercent(from.value/total)}`;
 
-  g.selectAll("chords.path")
+  g.selectAll("path.chords")
       .data(layout)
     .enter().append("path")
       .attr("class", "chords")
       .attr("d", path)
-      .attr("fill-opacity", FILL_OPACITY_FULL)
+      .attr("fill-opacity", FILL_OPACITY_INITIAL)
       .attr("fill", d => color(d.source.index))
       .on("mouseover", _ => d3.select(event.currentTarget).attr("fill-opacity", 0.95))
-      .on("mouseout", _ => d3.select(event.currentTarget).attr("fill-opacity", FILL_OPACITY_FULL))
+      .on("mouseout", _ => d3.select(event.currentTarget).attr("fill-opacity", FILL_OPACITY_INITIAL))
     .append("title")
       .text(d => `${get_title(d.source, d.target)}\n${get_title(d.target, d.source)}`);
 }
@@ -105,5 +105,16 @@ function initializeGroupsHovered(g) {
        opacité de 80%. Toutes les autres cordes doivent être affichées avec une opacité de 10%.
      - Rétablir l'affichage du diagramme par défaut lorsque la souris sort du cercle du diagramme.
   */
+  const highlight_group = () => {
+    const group_index = d3.select(event.currentTarget).data()[0].index;
+    const is_chord_connected_to_group = d => d.source.index === group_index || d.target.index === group_index;
 
+    d3.selectAll("path.chords").attr("fill-opacity", d => is_chord_connected_to_group(d) ? 0.8: 0.1);
+  };
+
+  g.selectAll("path.groups, text")
+    .on("mouseover", highlight_group)
+    .on("mouseout", _ => {
+      d3.selectAll("path.chords").attr("fill-opacity", 0.8)
+    });
 }
