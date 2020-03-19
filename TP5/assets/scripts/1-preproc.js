@@ -15,6 +15,10 @@ function colorScale(color, parties) {
   // TODO: Préciser le domaine de l'échelle en y associant chacun des partis politique de la liste spécifiée en paramètre.
   //       De plus, préciser la gamme de couleurs en spécifiant les couleurs utilisées par chacun des partis.
 
+  // échelle :
+  color.range(parties.map(r => r.name)); 
+  // domaine :
+  color.domain(parties.map(c => c.name));
 }
 
 /**
@@ -24,7 +28,12 @@ function colorScale(color, parties) {
  */
 function convertNumbers(data) {
   // TODO: Convertir les propriétés "id" et "votes" en type "number" pour chacun des éléments de la liste.
-
+  // pour chaque num dans Data on applique la fonction de conversion suivante :
+  data.map(num => {
+    //console.log(num);
+    num.id = parseInt(num.id)
+    num.votes = parseInt(num.votes)
+  });
 }
 
 /**
@@ -58,4 +67,20 @@ function createSources(data) {
   // TODO: Retourner l'objet ayant le format demandé. Assurez-vous de trier le tableau "results" pour chacune des entrées
   //       en ordre décroissant de votes (le candidat gagnant doit être le premier élément du tableau).
 
+  var sources = []
+  for( let i = 0 ; i < data.length;) {
+      var results = []
+      var object = data[i];
+      // console.log(object.id);
+      while(i<data.length && data[i].id==object.id) {
+          var temp = data[i];
+          var candidat = {candidate:temp.candidate, votes:temp.votes, percent:temp.percent, party:temp.party};
+          results.push(candidat);
+          i++
+      }
+      results.sort((x,y) => x.votes < y.votes );
+      var source = {id:object.id, name:object.name, results:results};
+      sources.push(source);
+  }
+ return sources;
 }
