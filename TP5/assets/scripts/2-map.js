@@ -24,6 +24,12 @@ function initTileLayer(L, map) {
        - Niveau de zoom: 4.
    */
 
+  map.setView([57.3, -94.7], 4);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png", {
+   maxZoom: 10,
+   minZoom: 1
+  }).addTo(map);
+
 }
 
 /**
@@ -36,7 +42,9 @@ function initTileLayer(L, map) {
  */
 function initSvgLayer(map) {
   // TODO: Créer l'élément SVG en vous basant sur l'exemple fourni. Assurez-vous de créer un élément "g" dans l'élément SVG.
+  var svg_element = d3.select(map.getPanes().overlayPane).append("svg"), g = svg_element.append("g").attr("class", "leaflet-zoom-hide");
 
+  return svg_element
 }
 
 /**
