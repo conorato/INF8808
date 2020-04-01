@@ -66,7 +66,30 @@ function createDistricts(g, path, canada, sources, color, showPanel) {
          d'informations associé à cette circonscription doit faire son apparition (utiliser la fonction "showPanel").
          Il est à noter qu'il est possible de sélectionner uniquement une circonscription à la fois.
    */
+  var districts = g.selectAll("g")
+                    .data(canada.features)
+                    .enter();
 
+  districts.append("path")
+              .attr("stroke-width",1)
+              .attr("stroke", "#333")
+              .attr("d",path)
+              .attr("class","canadaCirc")
+              .style("fill-opacity", 0.8)
+              .attr("fill", function(x) 
+              {
+                var circonscription = sources.find(function(y) 
+                {
+                  return x.properties.NUMCF == y.id
+                })
+                return color(circonscription.results[0].party)
+        
+              })
+              .on("click",function(x)
+                {
+                  d3.selectAll(".canadaCirc").classed("selected",false)
+                  d3.select(this).classed("selected",true)
+                  showPanel(x.properties.NUMCF)});
 }
 
 /**
@@ -82,5 +105,10 @@ function createDistricts(g, path, canada, sources, color, showPanel) {
  */
 function updateMap(svg, g, path, canada) {
   // TODO: Mettre à jour l'élément SVG, la position du groupe "g" et l'affichage des tracés en vous basant sur l'exemple fourni.
-
+  var pathBounds = path.bounds(canada);
+  svg.attr("width", pathBounds[1][0] - pathBounds[0][0])
+    .attr("height", pathBounds[1][1] - pathBounds[0][1])
+    .style("left", pathBounds[0][0] + "px")
+    .style("top", pathBounds[0][1] + "px");
+  g.attr("transform", "translate(" + -pathBounds[0][0] + "," + -pathBounds[0][1] + ")");
 }
