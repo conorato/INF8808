@@ -25,5 +25,15 @@ function search(map, g, districtId, bound, showPanel) {
       Sélectionner la zone recherchée en lui appliquant la classe "selected". De plus, afficher le panneau d'informations
       pour cette circonscription en faisant appel à la fonction "showPanel".
    */
+  map.fitBounds(bound,{
+   zoom: {animate: true },
+   maxZoom: 8,
+   pan: { animate: true, duration: 1, easeLinearity: 0.5 } 
+});
 
+d3.selectAll(".canadaCirc").classed("selected",false)
+d3.selectAll(".canadaCirc").filter(function(x) 
+                                    {districtId == x.properties.NUMCF}).classed("selected",true)
+// Affichage du menu d information
+showPanel(districtId)
 }

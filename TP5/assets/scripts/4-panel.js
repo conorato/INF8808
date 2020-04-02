@@ -19,7 +19,16 @@ function updateDomains(districtSource, x, y) {
          que les partis sont triés en ordre décroissant de votes obtenus (le parti du candidat gagnant doit se retrouver
          en premier).
    */
+  var min = d3.min(districtSource.results ,function(x) {x.votes})
+  var max = d3.max(districtSource.results ,function(x) {x.votes})
 
+  x.domain([min, max])
+
+  var partis = []
+  districtSource.results.forEach(function(y) { partis.push(y.party) })
+  partis.sort(function(a, b){ return b-a }); // en ordre décroissant
+
+  y.domain(partis);
 }
 
 /**
@@ -72,5 +81,5 @@ function updatePanelBarChart(gBars, gAxis, districtSource, x, y, yAxis, color, p
  */
 function reset(g) {
   // TODO: Réinitialiser l'affichage de la carte en retirant la classe "selected" de tous les éléments.
-
+  g.selectAll(".selected").classed("selected",false)
 }

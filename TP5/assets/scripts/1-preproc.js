@@ -16,7 +16,7 @@ function colorScale(color, parties) {
   //       De plus, préciser la gamme de couleurs en spécifiant les couleurs utilisées par chacun des partis.
 
   // échelle :
-  color.range(parties.map(r => r.name)); 
+  color.range(parties.map(r => r.color)); 
   // domaine :
   color.domain(parties.map(c => c.name));
 }
@@ -67,20 +67,37 @@ function createSources(data) {
   // TODO: Retourner l'objet ayant le format demandé. Assurez-vous de trier le tableau "results" pour chacune des entrées
   //       en ordre décroissant de votes (le candidat gagnant doit être le premier élément du tableau).
 
-  var sources = []
-  for( let i = 0 ; i < data.length;) {
-      var results = []
-      var object = data[i];
-      // console.log(object.id);
-      while(i<data.length && data[i].id==object.id) {
-          var temp = data[i];
-          var candidat = {candidate:temp.candidate, votes:temp.votes, percent:temp.percent, party:temp.party};
-          results.push(candidat);
-          i++
-      }
-      results.sort((x,y) => x.votes < y.votes );
-      var source = {id:object.id, name:object.name, results:results};
-      sources.push(source);
-  }
- return sources;
+var circonscriptions = []
+
+
+var temp = "circonscription recherchée"
+data.forEach(function(info)
+  {
+    if (info.name != temp) {
+      circonscriptions.push({
+        id: info.id,
+        name: info.name,
+        results:[{
+            candidate: info.candidate, 
+            votes: info.votes,
+            percent: info.percent,
+            party: info.party
+          }]
+      })
+      temp= info.name
+    }
+    else {
+      circonscriptions[circonscriptions.length-1].results.unshift(
+      {
+        candidate: info.candidate, 
+        votes: info.votes,     
+        percent: info.percent,  
+        party: info.party    
+      })
+    }
+    
+  })
+
+
+return circonscriptions
 }
