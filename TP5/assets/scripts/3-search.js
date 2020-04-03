@@ -33,7 +33,7 @@ function search(map, g, districtId, bound, showPanel) {
 
 d3.selectAll(".canadaCirc").classed("selected",false)
 d3.selectAll(".canadaCirc").filter(function(x) 
-                                    {districtId == x.properties.NUMCF}).classed("selected",true)
+                                    { return districtId == x.properties.NUMCF}).classed("selected",true)
 // Affichage du menu d information
 showPanel(districtId)
 }

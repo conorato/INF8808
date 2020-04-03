@@ -19,8 +19,8 @@ function updateDomains(districtSource, x, y) {
          que les partis sont triés en ordre décroissant de votes obtenus (le parti du candidat gagnant doit se retrouver
          en premier).
    */
-  var min = d3.min(districtSource.results ,function(x) {x.votes})
-  var max = d3.max(districtSource.results ,function(x) {x.votes})
+  var min = d3.min(districtSource.results ,function(x) { return x.votes})
+  var max = d3.max(districtSource.results ,function(x) { return x.votes})
 
   x.domain([min, max])
 
@@ -29,6 +29,8 @@ function updateDomains(districtSource, x, y) {
   partis.sort(function(a, b){ return b-a }); // en ordre décroissant
 
   y.domain(partis);
+
+  
 }
 
 /**
@@ -44,7 +46,13 @@ function updatePanelInfo(panel, districtSource, formatNumber) {
        - La nom du candidat gagnant ainsi que son parti;
        - Le nombre total de votes pour tous les candidats (utilisez la fonction "formatNumber" pour formater le nombre).
    */
+  var votes = 0
 
+  panel.select("#district-name").html(`${districtSource.name} [${districtSource.id}]`)
+  panel.select("#elected-candidate").html(`${districtSource.results[0].candidate} (${districtSource.results[0].party})`)
+
+  votes = d3.sum(districtSource.results, function(info) {info.votes})
+  panel.select("#votes-count").html(`${formatNumber(votes)} votes`)
 }
 
 /**
@@ -72,6 +80,54 @@ function updatePanelBarChart(gBars, gAxis, districtSource, x, y, yAxis, color, p
          vous devez indiquer "Autre" comme forme abrégée.
    */
 
+  gAxis.select(".y.axis").remove() // pour éviter que les axes se superposent 
+
+  gAxis.append("g")
+  .classed("y axis",true)
+  .call(yAxis)
+
+  yAxis.tickFormat(function(info) { 
+    var partyAbbreviation = "Other"
+    var temp = parties.find(function(objectInfo) { return objectInfo.name == info})
+    if (typeof(temp) !== "undefined")
+    {
+      partyAbbreviation =  temp.abbreviation
+    }
+    return partyAbbreviation
+  })
+
+  gBars.selectAll(".bar").remove()
+
+  var bars = gBars.selectAll(".bar")
+  .data(districtSource.results)
+  .enter()
+  .append("g")
+  .classed("bar",true)
+
+  bars.append("rect")
+  .attr("y", function(infoY) {
+  return y(infoY.party)
+  })
+  .attr("fill", function(info) {
+    return color.domain().includes(info.party)?color(info.party):"gray"
+    })
+  .attr("width", function(infoX) {
+    return x(infoX.votes)
+    }
+  )
+  .attr("height", function(info) {
+  return y.bandwidth();
+  });
+
+  bars.append("text")
+  .attr("x", function(info) {
+    return x(info.votes) + 5
+    })
+  .attr("y", function(info) {
+    return y(info.party) + y.bandwidth()/2
+  })
+  .text(function(info) { return info.percent})
+  .style("text-anchor", "start")
 }
 
 /**
