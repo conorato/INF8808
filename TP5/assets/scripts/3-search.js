@@ -17,23 +17,27 @@
  * @see http://leafletjs.com/reference-0.7.7.html#map-fitbounds
  */
 function search(map, g, districtId, bound, showPanel) {
-  /* TODO: Effectuer un zoom en utilisant la fonction "fitBounds" de Leaflet en respectant les contraintes suivantes:
-       - Le niveau de zoom maximum doit être de 8;
-       - Le pan doit être animé (durée de 1s et "easeLinearity" de 0.5s);
-       - Le zoom doit être animé.
+   /* TODO: Effectuer un zoom en utilisant la fonction "fitBounds" de Leaflet en respectant les contraintes suivantes:
+        - Le niveau de zoom maximum doit être de 8;
+        - Le pan doit être animé (durée de 1s et "easeLinearity" de 0.5s);
+        - Le zoom doit être animé.
 
-      Sélectionner la zone recherchée en lui appliquant la classe "selected". De plus, afficher le panneau d'informations
-      pour cette circonscription en faisant appel à la fonction "showPanel".
-   */
-  map.fitBounds(bound,{
-   zoom: {animate: true },
-   maxZoom: 8,
-   pan: { animate: true, duration: 1, easeLinearity: 0.5 } 
-});
+       Sélectionner la zone recherchée en lui appliquant la classe "selected". De plus, afficher le panneau d'informations
+       pour cette circonscription en faisant appel à la fonction "showPanel".
+    */
+   map.fitBounds(bound, {
+      zoom: {
+         animate: true,
+      },
+      maxZoom: 8,
+      pan: {
+         animate: true,
+         duration: 1,
+         easeLinearity: 0.5,
+      },
+   });
 
-d3.selectAll(".canadaCirc").classed("selected",false)
-d3.selectAll(".canadaCirc").filter(function(x) 
-                                    { return districtId == x.properties.NUMCF}).classed("selected",true)
-// Affichage du menu d information
-showPanel(districtId)
+   d3.selectAll(".canadaCirc").classed("selected", false);
+   d3.selectAll(".canadaCirc").filter(x => districtId === x.properties.NUMCF).classed("selected", true);
+   showPanel(districtId);
 }

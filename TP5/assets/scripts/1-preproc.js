@@ -14,10 +14,7 @@
 function colorScale(color, parties) {
   // TODO: Préciser le domaine de l'échelle en y associant chacun des partis politique de la liste spécifiée en paramètre.
   //       De plus, préciser la gamme de couleurs en spécifiant les couleurs utilisées par chacun des partis.
-
-  // échelle :
-  color.range(parties.map(r => r.color)); 
-  // domaine :
+  color.range(parties.map(r => r.color));
   color.domain(parties.map(c => c.name));
 }
 
@@ -29,10 +26,9 @@ function colorScale(color, parties) {
 function convertNumbers(data) {
   // TODO: Convertir les propriétés "id" et "votes" en type "number" pour chacun des éléments de la liste.
   // pour chaque num dans Data on applique la fonction de conversion suivante :
-  data.map(num => {
-    //console.log(num);
-    num.id = parseInt(num.id)
-    num.votes = parseInt(num.votes)
+  data.forEach(info => {
+    info.id = parseInt(info.id);
+    info.votes = parseInt(info.votes);
   });
 }
 
@@ -66,38 +62,15 @@ function convertNumbers(data) {
 function createSources(data) {
   // TODO: Retourner l'objet ayant le format demandé. Assurez-vous de trier le tableau "results" pour chacune des entrées
   //       en ordre décroissant de votes (le candidat gagnant doit être le premier élément du tableau).
-
-var circonscriptions = []
-
-
-var temp = "circonscription recherchée"
-data.forEach(function(info)
-  {
-    if (info.name != temp) {
-      circonscriptions.push({
-        id: info.id,
-        name: info.name,
-        results:[{
-            candidate: info.candidate, 
-            votes: info.votes,
-            percent: info.percent,
-            party: info.party
-          }]
-      })
-      temp= info.name
+  const countys = [];
+  let current_county = "";
+  data.forEach(({name, id, candidate, percent, party, votes}) => {
+    if (name != current_county) {
+      countys.push({id, name, results: []});
+      current_county = name;
     }
-    else {
-      circonscriptions[circonscriptions.length-1].results.unshift(
-      {
-        candidate: info.candidate, 
-        votes: info.votes,     
-        percent: info.percent,  
-        party: info.party    
-      })
-    }
-    
-  })
+    countys[countys.length - 1].results.unshift({candidate, votes, percent, party});
+  });
 
-
-return circonscriptions
+  return countys;
 }

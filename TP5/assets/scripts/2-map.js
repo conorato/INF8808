@@ -23,11 +23,10 @@ function initTileLayer(L, map) {
        - Coordonnées: [57.3, -94.7];
        - Niveau de zoom: 4.
    */
-
   map.setView([57.3, -94.7], 4);
   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png", {
-   maxZoom: 10,
-   minZoom: 1
+    maxZoom: 10,
+    minZoom: 1
   }).addTo(map);
 
 }
@@ -42,9 +41,10 @@ function initTileLayer(L, map) {
  */
 function initSvgLayer(map) {
   // TODO: Créer l'élément SVG en vous basant sur l'exemple fourni. Assurez-vous de créer un élément "g" dans l'élément SVG.
-  var svg_element = d3.select(map.getPanes().overlayPane).append("svg"), g = svg_element.append("g").attr("class", "leaflet-zoom-hide");
+  const svg_element = d3.select(map.getPanes().overlayPane).append("svg");
+  svg_element.append("g").attr("class", "leaflet-zoom-hide");
 
-  return svg_element
+  return svg_element;
 }
 
 /**
@@ -66,30 +66,24 @@ function createDistricts(g, path, canada, sources, color, showPanel) {
          d'informations associé à cette circonscription doit faire son apparition (utiliser la fonction "showPanel").
          Il est à noter qu'il est possible de sélectionner uniquement une circonscription à la fois.
    */
-  var districts = g.selectAll("g")
-                    .data(canada.features)
-                    .enter();
+  const districts = g.selectAll("g")
+    .data(canada.features)
+    .enter();
 
   districts.append("path")
-              .attr("stroke-width",1)
-              .attr("stroke", "#333")
-              .attr("d",path)
-              .attr("class","canadaCirc")
-              .style("fill-opacity", 0.8)
-              .attr("fill", function(x) 
-              {
-                var circonscription = sources.find(function(y) 
-                {
-                  return x.properties.NUMCF == y.id
-                })
-                return color(circonscription.results[0].party)
-        
-              })
-              .on("click",function(x)
-                {
-                  d3.selectAll(".canadaCirc").classed("selected",false)
-                  d3.select(this).classed("selected",true)
-                  showPanel(x.properties.NUMCF)});
+    .attr("stroke-width", 1)
+    .attr("stroke", "#333")
+    .attr("d", path)
+    .attr("class", "canadaCirc")
+    .style("fill-opacity", 0.8)
+    .attr("fill", x => {
+      const county = sources.find(y => x.properties.NUMCF === y.id);
+      return color(county.results[0].party);
+    }).on("click", function(x) {
+      d3.selectAll(".canadaCirc").classed("selected", false);
+      d3.select(this).classed("selected", true);
+      showPanel(x.properties.NUMCF);
+    });
 }
 
 /**
@@ -105,10 +99,11 @@ function createDistricts(g, path, canada, sources, color, showPanel) {
  */
 function updateMap(svg, g, path, canada) {
   // TODO: Mettre à jour l'élément SVG, la position du groupe "g" et l'affichage des tracés en vous basant sur l'exemple fourni.
-  var pathBounds = path.bounds(canada);
+  const pathBounds = path.bounds(canada);
   svg.attr("width", pathBounds[1][0] - pathBounds[0][0])
     .attr("height", pathBounds[1][1] - pathBounds[0][1])
     .style("left", pathBounds[0][0] + "px")
     .style("top", pathBounds[0][1] + "px");
   g.attr("transform", "translate(" + -pathBounds[0][0] + "," + -pathBounds[0][1] + ")");
+  g.selectAll("path").attr("d", path);
 }
